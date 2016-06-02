@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -34,7 +35,7 @@ public class ForegroundImageView extends ImageView {
      * @param drawableResId The drawable resource to be drawn on top of the children.
      */
     public void setForegroundResource(int drawableResId) {
-        setForeground(getContext().getResources().getDrawable(drawableResId));
+        setForeground(ContextCompat.getDrawable(getContext(),drawableResId));
     }
 
     /**

@@ -65,11 +65,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
                 Pair<View, String> photoPair = new Pair<View, String>(
                         holder.mImgPhoto, host.getString(R.string.transition_photo));
                 View decorView = host.getWindow().getDecorView();
-                View statusBackground = decorView.findViewById(android.R.id.statusBarBackground);
-                View navBackground = decorView.findViewById(android.R.id.navigationBarBackground);
+                View statusBackground = null;
+                View navBackground = null;
                 Pair statusPair = null;
                 Pair navPair = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    statusBackground = decorView.findViewById(android.R.id.statusBarBackground);
+                    navBackground = decorView.findViewById(android.R.id.navigationBarBackground);
                     statusPair = Pair.create(statusBackground,
                             statusBackground.getTransitionName());
                     if(navBackground != null) {
@@ -112,11 +114,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
         return photos.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTxtAuthor;
-        public ImageView mImgPhoto;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView mTxtAuthor;
+        ImageView mImgPhoto;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
             mTxtAuthor = (TextView) view.findViewById(R.id.author);
             mImgPhoto = (ImageView) view.findViewById(R.id.photo);

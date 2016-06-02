@@ -22,36 +22,36 @@ public class Photo implements Parcelable {
         "post_url": "https://unsplash.com/photos/yC-Yzbqy7PY"
     }*/
 
-    public final String format;
-    public final int width;
+    private final String format;
+    private final int width;
     public final int height;
-    public final String filename;
+    private final String filename;
     public final long id;
     public final String author;
-    public final String author_url;
-    public final String post_url;
+    private final String author_url;
+    private final String post_url;
 
     private static final String PHOTO_URL_BASE = "https://unsplash.it/%d?image=%d";
 
-    public Photo(String format,
-                 int width,
-                 int height,
-                 String filename,
-                 long id,
-                 String author,
-                 String author_url,
-                 String post_url) {
-        this.format = format;
-        this.width = width;
-        this.height = height;
-        this.filename = filename;
-        this.id = id;
-        this.author = author;
-        this.author_url = author_url;
-        this.post_url = post_url;
-    }
+//    public Photo(String format,
+//                 int width,
+//                 int height,
+//                 String filename,
+//                 long id,
+//                 String author,
+//                 String author_url,
+//                 String post_url) {
+//        this.format = format;
+//        this.width = width;
+//        this.height = height;
+//        this.filename = filename;
+//        this.id = id;
+//        this.author = author;
+//        this.author_url = author_url;
+//        this.post_url = post_url;
+//    }
 
-    protected Photo(Parcel in) {
+    private Photo(Parcel in) {
         format = in.readString();
         width = in.readInt();
         height = in.readInt();

@@ -29,8 +29,6 @@ public class MainActivity extends BaseActivity {
     private ProgressBar empty;
     private PhotoAdapter adapter;
 
-    private static final String TAG = "MainActivity";
-
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
 
     @Override

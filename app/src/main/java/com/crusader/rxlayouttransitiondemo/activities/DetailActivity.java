@@ -47,7 +47,7 @@ public class DetailActivity extends BaseActivity {
         initSharedElementCallback();
 
         int requestedPhotoWidth = getResources().getDisplayMetrics().widthPixels;
-        Photo mPhotoData = (Photo) getIntent().getParcelableExtra(IntentUtil.PHOTO);
+        Photo mPhotoData = getIntent().getParcelableExtra(IntentUtil.PHOTO);
 
         setEnterSharedElementCallback(elementCallback);
         int slideDuration = getResources().getInteger(R.integer.detail_desc_slide_duration);

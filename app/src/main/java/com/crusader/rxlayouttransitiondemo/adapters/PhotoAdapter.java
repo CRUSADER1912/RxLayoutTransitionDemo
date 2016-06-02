@@ -3,7 +3,6 @@ package com.crusader.rxlayouttransitiondemo.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -73,12 +72,20 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     statusPair = Pair.create(statusBackground,
                             statusBackground.getTransitionName());
-                    navPair = Pair.create(navBackground, navBackground.getTransitionName());
+                    if(navBackground != null) {
+                        navPair = Pair.create(navBackground, navBackground.getTransitionName());
+                    }
                 }
 
-                host.startActivity(intent,
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(host,
-                                authorPair, photoPair, statusPair, navPair).toBundle());
+                if(navPair != null){
+                    host.startActivity(intent,
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(host,
+                                    authorPair, photoPair, statusPair, navPair).toBundle());
+                }else{
+                    host.startActivity(intent,
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(host,
+                                    authorPair, photoPair, statusPair).toBundle());
+                }
             }
         });
         return holder;

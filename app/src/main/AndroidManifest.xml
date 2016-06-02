@@ -22,10 +22,6 @@
         <activity
             android:name=".activities.DetailActivity"
             android:theme="@style/AppTheme.Details" />
-        <activity
-            android:name=".activities.PhotoDetailActivity"
-            android:label="@string/title_activity_photo_detail"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

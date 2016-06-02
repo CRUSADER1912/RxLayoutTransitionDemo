@@ -38,6 +38,12 @@ public class DetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /**get the textView size and color detail beforehand
+         * this will be used for sharedElement callback
+         */
+        targetTextSize = mTxtAuthor.getTextSize();
+        targetTextColors = mTxtAuthor.getTextColors();
+
         initSharedElementCallback();
 
         int requestedPhotoWidth = getResources().getDisplayMetrics().widthPixels;
@@ -99,8 +105,6 @@ public class DetailActivity extends BaseActivity {
             public void onSharedElementStart(List<String> sharedElementNames,
                                              List<View> sharedElements,
                                              List<View> sharedElementSnapshots) {
-                targetTextSize = mTxtAuthor.getTextSize();
-                targetTextColors = mTxtAuthor.getTextColors();
                 mTxtAuthor.setTextColor(getIntent().getIntExtra(IntentUtil.TEXT_COLOR, Color.BLACK));
                 float textSize = getIntent().getFloatExtra(IntentUtil.FONT_SIZE, targetTextSize);
                 mTxtAuthor.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);

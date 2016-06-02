@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity {
 
         mSubscriptions.add(photoObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Photo>>() {
 
                     @Override

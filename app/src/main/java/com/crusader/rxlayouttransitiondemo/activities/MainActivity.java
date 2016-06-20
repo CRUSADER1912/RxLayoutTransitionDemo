@@ -8,15 +8,15 @@ import android.widget.ProgressBar;
 
 import com.crusader.rxlayouttransitiondemo.R;
 import com.crusader.rxlayouttransitiondemo.adapters.PhotoAdapter;
+import com.crusader.rxlayouttransitiondemo.application.LayoutTransitionApplication;
 import com.crusader.rxlayouttransitiondemo.data.UnsplashService;
 import com.crusader.rxlayouttransitiondemo.data.model.Photo;
 import com.crusader.rxlayouttransitiondemo.grid.GridMarginDecoration;
 
 import java.util.List;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,20 +31,25 @@ public class MainActivity extends BaseActivity {
 
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
 
+    @Inject
+    UnsplashService unsplashService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setupRecyclerView();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(UnsplashService.ENDPOINT)
-                .build();
+        resolveDependencies();
 
-        UnsplashService unsplashService = retrofit.create(UnsplashService.class);
-
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .baseUrl(UnsplashService.ENDPOINT)
+//                .build();
+//
+//        UnsplashService unsplashService = retrofit.create(UnsplashService.class);
+//
         Observable<List<Photo>> photoObservable = unsplashService.getFeed();
 
         mSubscriptions.add(photoObservable.subscribeOn(Schedulers.newThread())
@@ -75,6 +80,12 @@ public class MainActivity extends BaseActivity {
                     }
                 }));
 
+    }
+
+    private void resolveDependencies() {
+        ((LayoutTransitionApplication)getApplication())
+                .getmApiComponent()
+                .inject(MainActivity.this);
     }
 
     @Override

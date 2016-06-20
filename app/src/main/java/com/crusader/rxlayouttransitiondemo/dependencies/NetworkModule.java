@@ -36,8 +36,8 @@ public class NetworkModule {
     @Singleton
     Retrofit providesRetrofit(RxJavaCallAdapterFactory rxJavaCallAdapterFactory, GsonConverterFactory gsonConverterFactory){
        return new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(rxJavaCallAdapterFactory)
+                .addConverterFactory(gsonConverterFactory)
                 .baseUrl(baseUrl)
                 .build();
     }

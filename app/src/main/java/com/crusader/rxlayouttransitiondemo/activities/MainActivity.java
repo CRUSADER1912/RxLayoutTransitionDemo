@@ -1,17 +1,26 @@
 package com.crusader.rxlayouttransitiondemo.activities;
 
+import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.crusader.rxlayouttransitiondemo.R;
-import com.crusader.rxlayouttransitiondemo.adapters.PhotoAdapter;
 import com.crusader.rxlayouttransitiondemo.application.LayoutTransitionApplication;
 import com.crusader.rxlayouttransitiondemo.data.UnsplashService;
 import com.crusader.rxlayouttransitiondemo.data.model.Photo;
 import com.crusader.rxlayouttransitiondemo.grid.GridMarginDecoration;
+import com.crusader.rxlayouttransitiondemo.utils.IntentUtil;
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
 import java.util.List;
 
@@ -27,7 +36,7 @@ public class MainActivity extends BaseActivity {
 
     private RecyclerView grid;
     private ProgressBar empty;
-    private PhotoAdapter adapter;
+    private FastItemAdapter<Photo> fastAdapter;
 
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
 
@@ -39,6 +48,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setupRecyclerView();
+        grid.setAdapter(fastAdapter);
 
         resolveDependencies();
 
@@ -73,9 +83,7 @@ public class MainActivity extends BaseActivity {
 //                            Log.d(TAG, "onNext: "+photos.get(i).author);
 //                        }
 //                        Log.d(TAG, "onNext: "+photos.size());
-                        adapter = new PhotoAdapter(MainActivity.this,
-                                photos.subList(0, 21));
-                        grid.setAdapter(adapter);
+                        fastAdapter.add(photos.subList(0, 21));
                         empty.setVisibility(View.GONE);
                     }
                 }));
@@ -97,10 +105,61 @@ public class MainActivity extends BaseActivity {
     public void initComponents() {
         grid = (RecyclerView) findViewById(R.id.image_grid);
         empty = (ProgressBar) findViewById(android.R.id.empty);
+        fastAdapter = new FastItemAdapter<>();
     }
 
     @Override
     public void initListeners() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Photo>() {
+            @Override
+            public boolean onClick(View v, IAdapter<Photo> adapter, Photo photo, int position) {
+                if (position == RecyclerView.NO_POSITION) return true;
+
+                TextView mTxtAuthor = photo.getViewHolder(v).getmTxtAuthor();
+                ImageView mImgPhoto = photo.getViewHolder(v).getmImgPhoto();
+                final Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.putExtra(IntentUtil.PHOTO, photo);
+                intent.putExtra(IntentUtil.FONT_SIZE, mTxtAuthor.getTextSize());
+                intent.putExtra(IntentUtil.PADDING,
+                        new Rect(mTxtAuthor.getPaddingLeft(),
+                                mTxtAuthor.getPaddingTop(),
+                                mTxtAuthor.getPaddingRight(),
+                                mTxtAuthor.getPaddingBottom()));
+                intent.putExtra(IntentUtil.TEXT_COLOR,
+                        mTxtAuthor.getCurrentTextColor());
+
+                Pair<View, String> authorPair = new Pair<View, String>(
+                        mTxtAuthor, getString(R.string.transition_author));
+                Pair<View, String> photoPair = new Pair<View, String>(
+                        mImgPhoto, getString(R.string.transition_photo));
+                View decorView = getWindow().getDecorView();
+                View statusBackground = null;
+                View navBackground = null;
+                Pair statusPair = null;
+                Pair navPair = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    statusBackground = decorView.findViewById(android.R.id.statusBarBackground);
+                    navBackground = decorView.findViewById(android.R.id.navigationBarBackground);
+                    statusPair = Pair.create(statusBackground,
+                            statusBackground.getTransitionName());
+                    if(navBackground != null) {
+                        navPair = Pair.create(navBackground, navBackground.getTransitionName());
+                    }
+                }
+
+                if(navPair != null){
+                    startActivity(intent,
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this,
+                                    authorPair, photoPair, statusPair, navPair).toBundle());
+                }else{
+                    startActivity(intent,
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this,
+                                    authorPair, photoPair, statusPair).toBundle());
+                }
+                return true;
+            }
+        });
 
     }
 
